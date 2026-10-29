@@ -1,51 +1,89 @@
 package it.unibo.collections;
 
-import java.util.List;
+
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Iterator;
+import java.util.Collection;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
- * Example class using {@link List} and {@link Map}.
+ * Example class using {@link java.util.Set}.
  *
  */
 public final class UseListsAndMaps {
 
+    private static final int ELEMS = 20;
+
     private UseListsAndMaps() {
     }
+      
 
     /**
      * Program entry point.
      */
     public static void main() {
         /*
-         * 1) Create a new ArrayList<Integer>, and populate it with the numbers
-         * from 1000 (included) to 2000 (excluded).
+         * Considering the content of "UseCollection, write a program which, in
+         * order:
+         *
+         * 1) Builds a TreeSet containing Strings
          */
+         final Set<String> set = new TreeSet<>();
+        /* 
+         * 2) Populates such Collection with all the Strings representing numbers ranging from "1" to
+         * "20" (both included)
+         * /
+        
+        */
+        for(int i=1; i<=ELEMS; i++){
+            String string = String.valueOf(i);
+            set.add(string);
+        }
+       
+        /* 
+         * 3) Prints its content
+        */
+        for(String s : set){
+            IO.println("String:" + s);
+        }
+        
         /*
-         * 2) Create a new LinkedList<Integer> and, in a single line of code
-         * without using any looping construct (for, while), populate it with
-         * the same contents of the list of point 1.
+         * 4) Removes all those strings whose represented number is divisible by three.
+         * Note: the method removeIf(Predicate) is not allowed.
          */
+        
+
+        Iterator<String> iterator = set.iterator();
+        while(iterator.hasNext()){
+            
+            final String s = iterator.next();
+            int n = Integer.parseInt(s);
+            if(n%3 == 0){
+                iterator.remove();
+            }
+        }
         /*
-         * 3) Using "set" and "get" and "size" methods, swap the first and last
-         * element of the first list. You can not use any "magic number".
-         * (Suggestion: use a temporary variable)
+         * 5) Prints the content of the Set using a for-each construct
          */
-        /*
-         * 4) Using a single for-each, print the contents of the arraylist.
+        IO.println("point 5)");
+        for(String s : set){
+            IO.println(s);
+        }
+
+        /* 
+         * 6) Verifies whether all the numbers left in the set are even
          */
-        /*
-         * 5) Measure the performance of inserting new elements in the head of
-         * the collection: measure the time required to add 100.000 elements as
-         * first element of the collection for both ArrayList and LinkedList,
-         * using the previous lists. In order to measure times, use as example
-         * TestPerformance.java.
-         */
-        /*
-         * 6) Measure the performance of reading 1000 times an element whose
-         * position is in the middle of the collection for both ArrayList and
-         * LinkedList, using the collections of point 5. In order to measure
-         * times, use as example TestPerformance.java.
-         */
+        for(String s : set){
+            int newInt = Integer.parseInt(s);
+
+            if((newInt%2) != 0){
+                IO.println("found something not even! :(");
+                break;
+            }
+        }
+
         /*
          * 7) Build a new Map that associates to each continent's name its
          * population:
@@ -62,8 +100,21 @@ public final class UseListsAndMaps {
          *
          * Oceania -> 38,304,000
          */
-        /*
+        Map<String, Integer> continents = new HashMap<>();
+        continents.put("Africa", 1110635000);
+        continents.put("Americas", 927005000);
+
+          /*
          * 8) Compute the population of the world
          */
+        for(String s : continents.keySet()){
+            IO.println("Key:"+s+"Value:"+continents.get(s));
+        }
+
+        
+
     }
 }
+        
+      
+
