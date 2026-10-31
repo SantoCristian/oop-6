@@ -22,5 +22,9 @@ si verifichi lo stato del repository con `git status`.
      (funzionalità presente su `feature`)
 6. Si crei un nuovo repository nel proprio github personale
 7. Si aggiunga il nuovo repository creato come **remote** e si elenchino i remote
+
 8. Si faccia push del branch `master` sul proprio repository
+
+//git push remote master
 9. Si setti il branch remoto `master` del nuovo repository come *upstream* per il proprio branch `master` locale
+//git branch --set-upstream-to=remote/master
