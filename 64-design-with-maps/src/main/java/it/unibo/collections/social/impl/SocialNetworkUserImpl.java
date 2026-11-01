@@ -27,6 +27,9 @@ import java.util.Set;
  */
 public final class SocialNetworkUserImpl<U extends User> extends UserImpl implements SocialNetworkUser<U> {
 
+    Map<String, HashSet<U>>  map = new HashMap<>();
+
+
     /*
      *
      * [FIELDS]
@@ -64,13 +67,18 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *            application
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
-        super(null, null, null, 0);
+        super(name, surname, user, userAge);
+
     }
 
     /*
      * 2) Define a further constructor where the age defaults to -1
      */
 
+    public SocialNetworkUserImpl(final String name, final String surname, final String user){
+        super(name, surname, user);
+        //the super constructor is the one who define the age defaults to -1
+    }
     /*
      * [METHODS]
      *
@@ -78,7 +86,12 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if (!map.containsKey(circle)) {
+            map.put(circle, new HashSet<>());
+        }
+        Set<U> rightGroup = map.get(circle);
+        
+        return rightGroup.add(user);
     }
 
     /**
@@ -88,11 +101,23 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+            Set<U> usersInGroup = map.get(groupName);
+            try{
+                usersInGroup.isEmpty();
+            }catch(NullPointerException e){
+                IO.println("There isn't a Group called that way!");
+                usersInGroup= new HashSet<>();
+            }
+            return new ArrayList<>(usersInGroup);
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+        final Set<U> followedSet = new HashSet<>();
+
+        for(final Set<U> s : map.values()){
+            followedSet.addAll(s);
+        }
+        return new ArrayList<U>(followedSet);
     }
 }
