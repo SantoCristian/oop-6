@@ -5,6 +5,7 @@ import it.unibo.generics.graph.api.Graph;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
+import it.unibo.generics.graph.impl.GraphImpl;
 
 /**
  *
@@ -27,7 +28,8 @@ public final class UseGraph {
         /*
          * Test your graph implementation(s) by calling testGraph
          */
-        testGraph(null);
+        GraphImpl<String> graph = new GraphImpl<String>();
+        testGraph(graph);
     }
 
     private static void testGraph(final Graph<String> graph) {
