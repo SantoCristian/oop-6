@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.random.RandomGenerator;
+import it.unibo.exceptions.fakenetwork.Exceptions.NetworkException;
 
 import static it.unibo.exceptions.arithmetic.ArithmeticService.KEYWORDS;
 import static it.unibo.exceptions.arithmetic.ArithmeticUtil.nullIfNumberOrException;
@@ -29,6 +30,10 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
         /*
          * The probability should be in [0, 1[!
          */
+        if(failProbability<0 || failProbability>=1){
+            throw new java.lang.IllegalArgumentException("The probability should be in [0, 1[!");
+        }
+
         this.failProbability = failProbability;
         randomGenerator = new Random(randomSeed);
     }
@@ -50,13 +55,31 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
     @Override
     public void sendData(final String data) throws IOException {
         accessTheNetwork(data);
-        final var exceptionWhenParsedAsNumber = nullIfNumberOrException(data);
+        try{
+            final var exceptionWhenParsedAsNumber = nullIfNumberOrException(data);
+            if (KEYWORDS.contains(data) || exceptionWhenParsedAsNumber == null) {
+                commandQueue.add(data);
+            } else {
+                throw new NumberFormatException();
+            }
+            
+
+        }catch(NumberFormatException e){
+            commandQueue.clear();
+            throw new IllegalStateException(data + " is not a valid keyword (allowed: " + KEYWORDS + "), nor is a number", e);
+            //passa come parametro anche un Throwable!!! devo avere la causa per:
+            //-tenere conto dello stacktrace, voglio anche quello della causa
+            //-chiamare su IllegalStateException il metodo .getCause()
+            //-preserva lo stacktrace originale
+
+        }
+        /*final var exceptionWhenParsedAsNumber = nullIfNumberOrException(data);
         if (KEYWORDS.contains(data) || exceptionWhenParsedAsNumber == null) {
             commandQueue.add(data);
         } else {
             final var message = data + " is not a valid keyword (allowed: " + KEYWORDS + "), nor is a number";
-            IO.println(message);
             commandQueue.clear();
+        */
             /*
              * This method, in this point, should throw an IllegalStateException.
              * Its cause, however, is the previous NumberFormatException.
@@ -65,7 +88,7 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
              * The previous exceptions must be set as the cause of the new exception
              */
         }
-    }
+    
 
     @Override
     public String receiveResponse() throws IOException {
@@ -79,8 +102,9 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
 
     private void accessTheNetwork(final String message) throws IOException {
         if (randomGenerator.nextDouble() < failProbability) {
-            throw new IOException("Generic I/O error");
+            throw new NetworkException("Generic I/O error");
         }
     }
-
 }
+
+

@@ -48,6 +48,18 @@ public final class UseArithmeticService {
          * This method should re-try to send message to the provided server, catching all IOExceptions,
          * until it succeeds.
          */
+        boolean successfull = false;
+
+        while(successfull == false){
+            try{
+                server.sendData(message);
+
+                successfull = true;
+            }catch(final java.io.IOException ex){
+                IO.println("IO exception catched");
+            }
+        }
+
     }
 
     private static String retryReceiveOnNetworkError(final NetworkComponent server) {
@@ -55,6 +67,18 @@ public final class UseArithmeticService {
          * This method should re-try to retrieve information from the provided server, catching all IOExceptions,
          * until it succeeds.
          */
+        boolean successfull = false;
+
+        while(successfull == false){
+            try{
+                server.receiveResponse();
+
+                successfull = true;
+            }catch(final java.io.IOException ex){
+                IO.println("IO exception catched");
+            }
+        }
+        
         return null;
     }
 
